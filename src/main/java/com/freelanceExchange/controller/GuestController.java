@@ -16,4 +16,9 @@ public class GuestController {
         return "/general/aboutUs";
     }
 
+    @GetMapping("/login")
+    private String login(){
+        return "/authorization/login";
+    }
+
 }

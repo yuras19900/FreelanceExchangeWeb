@@ -738,73 +738,51 @@ SELECT|sys.sys_config
       <ObjectGrants>ALL PRIVILEGES!
 </ObjectGrants>
     </user>
-    <table id="230" parent="3" name="role"/>
-    <table id="231" parent="3" name="user"/>
-    <table id="232" parent="3" name="user_roles"/>
-    <column id="233" parent="230" name="role_id">
+    <table id="230" parent="3" name="user"/>
+    <table id="231" parent="3" name="user_role"/>
+    <column id="232" parent="230" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="234" parent="230" name="role_name">
+    <column id="233" parent="230" name="active">
       <Position>2</Position>
-      <DataType>varchar(100)|0s</DataType>
+      <DataType>bit(1)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="235" parent="230" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>role_id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <column id="236" parent="231" name="user_id">
-      <Position>1</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="237" parent="231" name="user_login">
-      <Position>2</Position>
-      <DataType>varchar(25)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="238" parent="231" name="user_password">
+    <column id="234" parent="230" name="login">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="239" parent="231" name="PRIMARY">
+    <column id="235" parent="230" name="password">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="236" parent="230" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>user_id</ColNames>
+      <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="240" parent="232" name="user_id">
+    <column id="237" parent="231" name="user_id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="241" parent="232" name="role_id">
+    <column id="238" parent="231" name="roles">
       <Position>2</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>varchar(255)|0s</DataType>
     </column>
-    <index id="242" parent="232" name="user_id">
+    <index id="239" parent="231" name="FK859n2jvi8ivhui0rl0esws6o">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="243" parent="232" name="role_id">
-      <ColNames>role_id</ColNames>
-      <Type>btree</Type>
-    </index>
-    <foreign-key id="244" parent="232" name="user_roles_ibfk_1">
+    <foreign-key id="240" parent="231" name="FK859n2jvi8ivhui0rl0esws6o">
       <ColNames>user_id</ColNames>
       <RefTableName>user</RefTableName>
-      <RefColNames>user_id</RefColNames>
-    </foreign-key>
-    <foreign-key id="245" parent="232" name="user_roles_ibfk_2">
-      <ColNames>role_id</ColNames>
-      <RefTableName>role</RefTableName>
-      <RefColNames>role_id</RefColNames>
+      <RefColNames>id</RefColNames>
     </foreign-key>
   </database-model>
 </dataSource>
