@@ -7,19 +7,19 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"com.freelanceExchange.controller"})
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        registry.jsp().prefix("/WEB-INF/views/").suffix(".jsp");
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/login").setViewName("authorization/login");
     }
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.jsp().prefix("/WEB-INF/jsp/").suffix(".jsp");
     }
-
 }

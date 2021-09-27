@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@EnableJpaRepositories("com.freelanceExchange.repo")
+@EnableJpaRepositories("com.freelanceExchange.dao")
 @ComponentScan("com.freelanceExchange")
 @EntityScan("com.freelanceExchange.model")
 public class ServingWebContentApplication {
