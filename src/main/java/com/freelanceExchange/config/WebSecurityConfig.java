@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -30,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/registration").not().fullyAuthenticated()
                 .antMatchers("/").permitAll()
-                .antMatchers("/aboutUs").hasRole("USER")
+                .antMatchers("/aboutUs").hasAuthority("USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -40,7 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .permitAll()
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+                .and()
+                .csrf().disable();
     }
 
     @Autowired

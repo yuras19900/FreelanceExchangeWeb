@@ -4,10 +4,13 @@
 <html>
 <body>
 <h2>Main page</h2>
-<p>Чтобы иметь доступ ко всему функционалу <a href="/login">войдите</a> в систему</p>
-<sec:authorize access="isAuthenticated()">
-<a href="aboutUs">About us</a>
+<sec:authorize access="isAnonymous()">
+    Чтобы иметь доступ ко всему функционалу <a href="/login">войдите</a> в систему.
 </sec:authorize>
+<sec:authorize access="isAuthenticated()">
+    <a href="aboutUs">About us</a>
+</sec:authorize>
+<br>
 
 <a href="/test">Тестовая страница</a>
 <sec:authorize access="isAuthenticated()">
