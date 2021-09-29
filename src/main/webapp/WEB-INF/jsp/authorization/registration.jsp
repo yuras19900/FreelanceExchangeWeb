@@ -25,6 +25,15 @@
         <form:errors path="password"></form:errors>
             ${passwordError}
     </div>
+    <div>
+        <input type="radio" id="user" name="role" value="USER" checked>
+        <label for="user">Заказчик</label>
+    </div>
+    <div>
+        <input type="radio" id="employee" name="role" value="EMPLOYEE">
+        <label for="employee">Исполнитель</label>
+        ${rolesError}
+    </div>
     <button type="submit">Зарегистрироваться</button>
 </form:form>
     <a href="/">На главную</a>

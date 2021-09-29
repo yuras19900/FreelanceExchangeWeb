@@ -57,6 +57,7 @@ public class UserService implements UserDetailsService {
         if(userFromDb != null){
             return false;
         }
+
         user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);

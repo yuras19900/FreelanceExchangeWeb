@@ -24,7 +24,6 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model){
-
         if (bindingResult.hasErrors()){
             return "authorization/registration";
         }

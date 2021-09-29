@@ -8,7 +8,8 @@
     Чтобы иметь доступ ко всему функционалу <a href="/login">войдите</a> в систему.
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
-    <a href="aboutUs">About us</a>
+    <a href="aboutUs">О нас</a>
+    <a href="/myOrders">Мои заказы</a>
 </sec:authorize>
 <br>
 
