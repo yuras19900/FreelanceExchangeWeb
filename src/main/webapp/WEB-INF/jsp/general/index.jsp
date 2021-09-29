@@ -7,18 +7,25 @@
 <sec:authorize access="isAnonymous()">
     Чтобы иметь доступ ко всему функционалу <a href="/login">войдите</a> в систему.
 </sec:authorize>
-<sec:authorize access="isAuthenticated()">
-    <a href="aboutUs">О нас</a>
+
+<sec:authorize access="hasRole('USER')">
     <a href="/myOrders">Мои заказы</a>
 </sec:authorize>
 <br>
 
-<a href="/test">Тестовая страница</a>
+<sec:authorize access="hasRole('EMPLOYEE')">
+    <a href="/employee/vacantOrders">Свободные заказы</a>
+    <a href="/employee/myActiveOrders">Мои активные заказы</a>
+</sec:authorize>
+
 <sec:authorize access="isAuthenticated()">
     <form action="/logout" method="post">
         <input type="submit" value="Sign Out"/>
     </form>
 </sec:authorize>
 
+<sec:authorize access="isAuthenticated()">
+    <a href="aboutUs">О нас</a>
+</sec:authorize>
 </body>
 </html>

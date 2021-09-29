@@ -30,6 +30,10 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id")
+    private User employee;
+
     public Integer getId() {
         return id;
     }
@@ -100,5 +104,13 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public User getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(User employee) {
+        this.employee = employee;
     }
 }

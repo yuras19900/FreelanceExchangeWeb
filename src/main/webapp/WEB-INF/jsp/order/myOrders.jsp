@@ -15,6 +15,7 @@
 
 <c:forEach var="order" items="${orders}">
     <p>${order.name}</p>
+    <a href="/order${order.id}">Просмотр заказа</a>
 </c:forEach>
 </body>
 </html>
