@@ -29,10 +29,27 @@ ${order.tag}
     </c:forEach>
 </c:if>
 <c:if test="${order.vacant == false}">
-    <h3>Предоплата внесена, исполнитель работает с заказом</h3>
-    <p>Информация о заявке:</p>
-    <p>Цена:${acceptedProposal.cost}</p>
-    <p>Описание:${acceptedProposal.description}</p>
+    <c:if test="${order.ready == false}">
+        <h3>Предоплата внесена, исполнитель работает с заказом</h3>
+        <p>Информация о заявке:</p>
+        <p>Цена:${acceptedProposal.cost}</p>
+        <p>Описание:${acceptedProposal.description}</p>
+    </c:if>
+    <c:if test="${order.ready == true}">
+        <c:if test="${order.paid == false}">
+            <p> Заказ выполнен. Для получения доступа к файлу, оплатите оставшуюся часть заказа</p>
+            <form method="post" action="payOrder${order.id}">
+                <button type="submit">Оплатить</button>
+            </form>
+        </c:if>
+    </c:if>
+    <c:if test="${order.paid == true}">
+        <p>Заказ выполнен.</p>
+        <c:forEach var="result" items="${results}">
+            <p>Описание: ${result.description}
+            <p><a href="/download${result.filename}" download>Ваш файл</a> </p>
+        </c:forEach>
+    </c:if>
 </c:if>
 
 </body>

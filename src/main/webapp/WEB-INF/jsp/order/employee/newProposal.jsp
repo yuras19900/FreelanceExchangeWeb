@@ -20,15 +20,16 @@ ${order.tag}
     <form:form method="post" modelAttribute="proposalForm" action="/employee/newProposal${order.id}">
     <h2>Создание нового заказа</h2>
     <div>
-        <form:input type="text" path="description" placeholder="Описание вашего предложения"
+        <form:input type="text" path="description" placeholder="Описание вашего предложения" required="true"
                     autofocus="true"></form:input>
     </div>
     <div>
-        <form:input type="text" path="cost" placeholder="Введите сумму за выполенение заказа в BYN"></form:input>
+        <form:input type="text" path="cost" required="true" placeholder="Введите сумму за выполенение заказа в BYN"></form:input> BYN
     </div>
 
     <button type="submit">Отправить заявку</button>
     <a href="/employee/vacantOrders">Вернуться к поиску заказа</a>
     </form:form>
+</div>
 </body>
 </html>

@@ -18,6 +18,8 @@ public class Order {
     @Column(nullable = false)
     private String description;
 
+    private boolean issue;
+
     private boolean vacant;
 
     private boolean ready;
@@ -112,5 +114,13 @@ public class Order {
 
     public void setEmployee(User employee) {
         this.employee = employee;
+    }
+
+    public boolean isIssue() {
+        return issue;
+    }
+
+    public void setIssue(boolean issue) {
+        this.issue = issue;
     }
 }

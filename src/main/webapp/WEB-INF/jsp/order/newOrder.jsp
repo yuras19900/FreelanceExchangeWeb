@@ -11,14 +11,14 @@
     <form:form method="post" modelAttribute="orderForm" action="/newOrder">
         <h2>Создание нового заказа</h2>
         <div>
-            <form:input type="text" path="name" placeholder="Название заказа"
+            <form:input type="text" path="name" required="true" placeholder="Название заказа"
                         autofocus="true"></form:input>
         </div>
         <div>
             <form:input type="text" path="tag" placeholder="Выберите тематику заказа(необязательно)"></form:input>
         </div>
         <div>
-            <form:input type="text" path="description"
+            <form:input type="text" path="description" required="true"
                         placeholder="Описание заказа"></form:input>
             ${requiredFieldError}
         </div>

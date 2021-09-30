@@ -15,6 +15,13 @@
 
 <c:forEach var="order" items="${orders}">
     <p>${order.name}</p>
+    <p>Статус заказа:
+      <c:if test="${order.vacant == false}">
+            <c:if test="${order.ready == false}">
+
+            </c:if>
+
+    </c:if></p>
     <a href="/order${order.id}">Просмотр заказа</a>
 </c:forEach>
 </body>
