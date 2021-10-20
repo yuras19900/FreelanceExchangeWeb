@@ -9,13 +9,22 @@
 </sec:authorize>
 
 <sec:authorize access="hasRole('USER')">
-    <a href="/myOrders">Мои заказы</a>
+    <a href="/my-orders">Мои заказы</a>
 </sec:authorize>
 <br>
 
 <sec:authorize access="hasRole('EMPLOYEE')">
-    <a href="/employee/vacantOrders">Свободные заказы</a>
-    <a href="/employee/myActiveOrders">Мои активные заказы</a>
+    <a href="/employee/vacant-orders">Свободные заказы</a>
+    <a href="/employee/my-active-orders">Мои активные заказы</a>
+</sec:authorize>
+
+<sec:authorize access="hasRole('MANAGER')">
+    <a href="/manager/issue-orders">Просмотр заказов с жалобами</a>
+</sec:authorize>
+
+<sec:authorize access="hasRole('ADMIN')">
+    <a href="/admin/add-manager">Регистрация менеджера</a>
+    <a href="/admin/all-users">Просмотр всех пользователей</a>
 </sec:authorize>
 
 <sec:authorize access="isAuthenticated()">
@@ -25,7 +34,7 @@
 </sec:authorize>
 
 <sec:authorize access="isAuthenticated()">
-    <a href="aboutUs">О нас</a>
+    <a href="/about-us">О нас</a>
 </sec:authorize>
 </body>
 </html>

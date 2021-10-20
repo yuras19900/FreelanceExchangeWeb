@@ -17,18 +17,18 @@ ${order.description}
 ${order.tag}
 
 <div>
-    <form:form method="post" modelAttribute="proposalForm" action="/employee/newProposal${order.id}">
-    <h2>Создание нового заказа</h2>
+    <form:form method="post" modelAttribute="proposalForm" action="/employee/new-proposal${order.id}">
+    <h2>Создание заявки на выполнение заказа</h2>
     <div>
         <form:input type="text" path="description" placeholder="Описание вашего предложения" required="true"
                     autofocus="true"></form:input>
     </div>
     <div>
-        <form:input type="text" path="cost" required="true" placeholder="Введите сумму за выполенение заказа в BYN"></form:input> BYN
+        <form:input type="text" path="cost" required="true" placeholder="Введите сумму за выполенение заказа" pattern="[0-9]{1,5}"></form:input> BYN
     </div>
 
     <button type="submit">Отправить заявку</button>
-    <a href="/employee/vacantOrders">Вернуться к поиску заказа</a>
+    <a href="/employee/vacant-orders">Вернуться к поиску заказа</a>
     </form:form>
 </div>
 </body>

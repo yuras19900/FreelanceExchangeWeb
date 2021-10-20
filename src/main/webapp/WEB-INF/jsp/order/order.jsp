@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -23,7 +24,7 @@ ${order.tag}
         <p>Отправитель:${proposal.user.username}</p>
         <p>Описание: ${proposal.description}</p>
         <p>Стоимость выполнения: ${proposal.cost} BYN</p>
-        <form method="post" action="acceptProposal${proposal.id}for${order.id}">
+        <form method="post" action="accept-proposal${proposal.id}for${order.id}">
             <button type="submit">Принять заявку и внести предоплату</button>
         </form>
     </c:forEach>
@@ -47,9 +48,39 @@ ${order.tag}
         <p>Заказ выполнен.</p>
         <c:forEach var="result" items="${results}">
             <p>Описание: ${result.description}
-            <p><a href="/download${result.filename}" download>Ваш файл</a> </p>
+            <p><a href="/download${result.filename}" download>Скачать</a></p>
         </c:forEach>
+
+        <c:if test="${order.closed == false}">
+        <c:if test="${order.issue == false}">
+            <p>Если вы удовлетворены выполнением заказа, и результат соответсвует ранее обговоренным требованиям,
+                нажмите клавишу "Закрыть заказ".</p>
+            <form method="post" action="/close-order${order.id}">
+                <button type="submit">Закрыть заказ</button>
+            </form>
+            <p>Если выполненный заказ не соответствует заявленным требованиям, вы в праве оставить жалобу, заполнив
+                форму, которая находится снизу.</p>
+            <div>
+                <form:form method="post" modelAttribute="reportForm" action="/new-report${order.id}">
+                    <p>Жалоба на выполненный заказ</p>
+                    <div>
+                        <form:input type="text" path="description" required="true"
+                                    placeholder="Описание жалобы"></form:input>
+                    </div>
+                    <button type="submit">Оставить жалобу</button>
+                </form:form>
+            </div>
+        </c:if>
+        </c:if>
+        <c:if test="${order.issue == true}">Жалоба успешно отправлена, ожидайте, в скором времени наши менеджеры рассмотрят ваш заказ и примут по нему решение.</c:if>
     </c:if>
+</c:if>
+<c:forEach var="anwser" items="${answers}">
+    <p>Решение по жалобе</p>
+    ${anwser.description}
+</c:forEach>
+<c:if test="${order.closed == true}">
+    <p>Ваш заказ выполнен. Если у вас какие-то вопросы по поводу заказа, свяжитесь с нашими менеджерами. Спасибо, что воспользовались нашими услугами!</p>
 </c:if>
 
 </body>

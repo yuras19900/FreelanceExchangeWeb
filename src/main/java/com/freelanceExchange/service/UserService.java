@@ -36,29 +36,17 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.findByUsername(username);
-        if (user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
         return user;
     }
 
-    public User findUserById(Integer userId){
-        Optional<User> userFromDb = userDao.findById(userId);
-        return userFromDb.orElse(new User());
-    }
-
-    public List<User> allUsers(){
-        return userDao.findAll();
-    }
-
-    public boolean saveUser(User user){
+    public boolean saveUser(User user) {
         User userFromDb = userDao.findByUsername(user.getUsername());
-
-        if(userFromDb != null){
+        if (userFromDb != null) {
             return false;
         }
-
-        user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
         userDao.save(user);

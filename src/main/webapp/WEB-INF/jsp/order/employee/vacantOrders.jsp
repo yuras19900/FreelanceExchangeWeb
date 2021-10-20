@@ -10,7 +10,7 @@
     <p>${order.name}</p>
     <p>${order.description}</p>
     <p>${order.tag}</p>
-    <a href="/employee/newProposal${order.id}">Просмотреть заказ</a>
+    <a href="/employee/new-proposal${order.id}">Просмотреть заказ</a>
 </c:forEach>
 </body>
 </html>

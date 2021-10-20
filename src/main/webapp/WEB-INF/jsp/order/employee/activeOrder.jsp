@@ -13,15 +13,13 @@
 </p>
 <p>Стоимость заказа: ${proposal.cost}
 </p>
-<c:if test="${order.ready == true}">
     <c:forEach var="result" items="${results}">
-
+        <p>${result.description}</p>
+        <a href="/download${order.id}">Скачать файл</a>
     </c:forEach>
-</c:if>
-
 <c:if test="${order.ready == false}">
 <div>
-    <form:form method="post" modelAttribute="resultForm" action="/employee/addResult${order.id}" enctype="multipart/form-data">
+    <form:form method="post" modelAttribute="resultForm" action="/employee/add-result${order.id}" enctype="multipart/form-data">
         <h2>Отправка результата</h2>
         <div>
             <form:input type="text" path="description" required="true" placeholder="Описание итоговой работы"
@@ -32,8 +30,15 @@
         </div>
         <button type="submit">Отправить результат</button>
     </form:form>
-    <h4>${emptyFileError}</h4>
+    ${emptyFileError}
 </div>
 </c:if>
+<c:if test="${order.issue == true}">
+    <p>На результаты выполнения вашего заказа была отправлена жалоба. Ожидайте, менеджер рассмотрит жалобу и примет решение.</p>
+</c:if>
+<c:forEach var="anwser" items="${answers}">
+    <p>Решение по жалобе</p>
+    <p>${anwser.description}</p>
+</c:forEach>
 </body>
 </html>

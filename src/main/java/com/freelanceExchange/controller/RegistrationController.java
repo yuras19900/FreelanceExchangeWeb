@@ -1,14 +1,14 @@
 package com.freelanceExchange.controller;
 
+import com.freelanceExchange.model.Role;
 import com.freelanceExchange.model.User;
 import com.freelanceExchange.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 
 @Controller
 public class RegistrationController {
@@ -23,12 +23,19 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model){
-        if (bindingResult.hasErrors()){
-            return "authorization/registration";
-        }
+    public String addUser(@ModelAttribute("userForm") User userForm, Model model,
+                          @RequestParam("role") String role){
+
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
             model.addAttribute("passwordError", "Пароли не совпадают");
+            return "authorization/registration";
+        }
+        if(role.equals("ROLE_USER")){
+            userForm.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
+        } else if(role.equals("ROLE_EMPLOYEE")){
+            userForm.setRoles(Collections.singleton(new Role(2, "ROLE_EMPLOYEE")));
+        } else {
+            model.addAttribute("roleError", "Выберите роль");
             return "authorization/registration";
         }
         if (!userService.saveUser(userForm)){

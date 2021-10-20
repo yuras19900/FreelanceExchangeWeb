@@ -9,20 +9,32 @@
 <body>
 <table style="width:100%">
     <tr>
-        <td><a href="/newOrder">Новый заказ</a></td>
+        <td><a href="/new-order">Новый заказ</a></td>
     </tr>
 </table>
-
-<c:forEach var="order" items="${orders}">
-    <p>${order.name}</p>
+<p>Активные заказы</p>
+<c:forEach var="activeOrder" items="${activeOrders}">
+    <p>${activeOrder.name}</p>
     <p>Статус заказа:
-      <c:if test="${order.vacant == false}">
-            <c:if test="${order.ready == false}">
+      <c:if test="${activeOrder.vacant == false}">
+            <c:if test="${activeOrder.ready == false}">
 
             </c:if>
 
     </c:if></p>
-    <a href="/order${order.id}">Просмотр заказа</a>
+    <a href="/order${activeOrder.id}">Просмотр заказа</a>
+</c:forEach>
+<p>Выполненные заказы</p>
+<c:forEach var="closedOrder" items="${closedOrders}">
+    <p>${closedOrder.name}</p>
+    <p>Статус заказа:
+        <c:if test="${closedOrder.vacant == false}">
+            <c:if test="${closedOrder.ready == false}">
+
+            </c:if>
+
+        </c:if></p>
+    <a href="/order${closedOrder.id}">Просмотр заказа</a>
 </c:forEach>
 </body>
 </html>

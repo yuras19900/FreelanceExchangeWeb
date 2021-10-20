@@ -25,6 +25,7 @@ public class OrderService {
         order.setReady(false);
         order.setPaid(false);
         order.setClosed(false);
+        order.setIssue(false);
         orderDao.save(order);
     }
 }

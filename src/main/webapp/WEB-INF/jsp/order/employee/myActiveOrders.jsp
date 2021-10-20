@@ -5,9 +5,16 @@
     <title>Мои активные заказы</title>
 </head>
 <body>
-<c:forEach var="order" items="${orders}">
-    <p>${order.name}</p>
-    <a href="/employee/activeOrder${order.id}">Просмотр заказа</a>
+<p>Активные заказы</p>
+<c:forEach var="activeOrder" items="${activeOrders}">
+    <p>${activeOrder.name}</p>
+    <a href="/employee/active-order${activeOrder.id}">Просмотр заказа</a>
+</c:forEach>
+
+<p>Выполненные заказы</p>
+<c:forEach var="closedOrder" items="${closedOrders}">
+    <p>${closedOrder.name}</p>
+    <a href="/employee/active-order${closedOrder.id}">Просмотр заказа</a>
 </c:forEach>
 
 </body>

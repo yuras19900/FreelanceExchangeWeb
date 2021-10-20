@@ -26,13 +26,12 @@
             ${passwordError}
     </div>
     <div>
-        <input type="radio" id="user" name="role" value="USER" checked>
+        <input type="radio" id="user" name="role" value="ROLE_USER" checked>
         <label for="user">Заказчик</label>
     </div>
     <div>
-        <input type="radio" id="employee" name="role" value="EMPLOYEE">
+        <input type="radio" id="employee" name="role" value="ROLE_EMPLOYEE">
         <label for="employee">Исполнитель</label>
-        ${rolesError}
     </div>
     <button type="submit">Зарегистрироваться</button>
 </form:form>

@@ -1,6 +1,7 @@
 package com.freelanceExchange.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders") //order зарезервировано sql
@@ -27,6 +28,8 @@ public class Order {
     private boolean paid;
 
     private boolean closed;
+
+    private LocalDateTime dateTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -122,5 +125,13 @@ public class Order {
 
     public void setIssue(boolean issue) {
         this.issue = issue;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }

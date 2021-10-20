@@ -1,12 +1,7 @@
 package com.freelanceExchange.controller;
 
-import com.freelanceExchange.dao.OrderDao;
-import com.freelanceExchange.dao.ProposalDao;
-import com.freelanceExchange.dao.ResultDao;
-import com.freelanceExchange.model.Order;
-import com.freelanceExchange.model.Proposal;
-import com.freelanceExchange.model.Result;
-import com.freelanceExchange.model.User;
+import com.freelanceExchange.dao.*;
+import com.freelanceExchange.model.*;
 import com.freelanceExchange.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,32 +33,43 @@ public class OrderController {
     @Autowired
     private ResultDao resultDao;
 
+    @Autowired
+    private ReportDao reportDao;
+
+    @Autowired
+    private AnswerDao answerDao;
+
     @Value("${upload.path}")
     private String uploadPath;
 
-    @GetMapping("/myOrders")
+    @GetMapping("/my-orders")
     public String myOrders(Model model, @AuthenticationPrincipal User user) {
-        List<Order> orders = orderService.findAllByUserId(user);
-        model.addAttribute("orders", orders);
+        List<Order> closedOrders = orderDao.findOrdersByUserAndClosedIsTrue(user);
+        List<Order> activeOrders = orderDao.findOrdersByUserAndClosedIsFalse(user);
+        model.addAttribute("activeOrders", activeOrders);
+        model.addAttribute("closedOrders", closedOrders);
         return "order/myOrders";
     }
 
-    @GetMapping("/newOrder")
+    @GetMapping("/new-order")
     public String newOrder(Model model) {
         model.addAttribute("orderForm", new Order());
         return "order/newOrder";
     }
 
-    @PostMapping("/newOrder")
+    @PostMapping("/new-order")
     public String addOrder(@ModelAttribute("orderForm") Order orderForm, BindingResult bindingResult, Model model, @AuthenticationPrincipal User user) {
         orderService.saveOrder(orderForm, user);
-        return "redirect:/myOrders";
+        return "redirect:/my-orders";
     }
 
     @GetMapping("/order{id}")
     public String orderById(@PathVariable Integer id, Model model) {
         Order order = orderDao.getById(id);
         model.addAttribute("order", order);
+        model.addAttribute("reportForm", new Report());
+        List<Answer> answers = answerDao.findAnswersByOrder(order);
+        model.addAttribute("answers", answers);
         if (order.isVacant()) {
             List<Proposal> proposals = proposalDao.findProposalByOrder(order);
             model.addAttribute("proposals", proposals);
@@ -73,13 +79,13 @@ public class OrderController {
             model.addAttribute("acceptedProposal", acceptedProposal);
         }
         if (order.isPaid()) {
-            List<Result> results = resultDao.findResultByOrder(order);
+            List<Result> results = resultDao.findResultsByOrder(order);
             model.addAttribute("results", results);
         }
         return "order/order";
     }
 
-    @PostMapping("acceptProposal{proposalId}for{orderId}")
+    @PostMapping("/accept-proposal{proposalId}for{orderId}")
     public String acceptProposal(@PathVariable Integer proposalId, @PathVariable Integer orderId) {
 
         Order order = orderDao.getById(orderId);
@@ -93,7 +99,7 @@ public class OrderController {
         order.setEmployee(proposal.getUser());
         order.setVacant(false);
         orderDao.save(order);
-        return "order/myOrders";
+        return "redirect:/my-orders";
     }
 
     @PostMapping("payOrder{orderId}")
@@ -101,7 +107,7 @@ public class OrderController {
         Order order = orderDao.getById(orderId);
         order.setPaid(true);
         orderDao.save(order);
-        return "order/myOrders";
+        return "redirect:/order{orderId}";
     }
 
     @GetMapping("/download{fileName}")
@@ -118,5 +124,25 @@ public class OrderController {
             }
         }
         return "order/myOrders";
+    }
+
+    @PostMapping("/new-report{id}")
+    public String newReport(@PathVariable Integer id, @ModelAttribute ("reportForm") Report reportForm){
+        Order order = orderDao.getById(id);
+        reportForm.setOrder(order);
+        reportForm.setClosed(false);
+        reportForm.setDescription(reportForm.getDescription());
+        order.setIssue(true);
+        orderDao.save(order);
+        reportDao.save(reportForm);
+        return "redirect:/order{id}";
+    }
+
+    @PostMapping("/close-order{id}")
+    public String closeOrder(@PathVariable Integer id){
+        Order order =orderDao.getById(id);
+        order.setClosed(true);
+        orderDao.save(order);
+        return "redirect:/my-orders";
     }
 }

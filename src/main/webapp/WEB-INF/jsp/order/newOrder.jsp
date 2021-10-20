@@ -8,7 +8,7 @@
 </head>
 <body>
 <div>
-    <form:form method="post" modelAttribute="orderForm" action="/newOrder">
+    <form:form method="post" modelAttribute="orderForm" action="/new-order">
         <h2>Создание нового заказа</h2>
         <div>
             <form:input type="text" path="name" required="true" placeholder="Название заказа"
@@ -20,7 +20,6 @@
         <div>
             <form:input type="text" path="description" required="true"
                         placeholder="Описание заказа"></form:input>
-            ${requiredFieldError}
         </div>
 
         <button type="submit">Оставить заказ</button>
