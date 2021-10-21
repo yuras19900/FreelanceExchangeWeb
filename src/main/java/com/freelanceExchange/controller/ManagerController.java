@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -54,6 +56,7 @@ public class ManagerController {
             @ModelAttribute("answerForm") Answer answerForm){
         Order order = orderDao.getById(id);
         answerForm.setOrder(order);
+        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
         order.setReady(false);
         order.setIssue(false);
         orderDao.save(order);
@@ -67,6 +70,7 @@ public class ManagerController {
                                  @ModelAttribute("answerForm") Answer answerForm){
         Order order = orderDao.getById(id);
         answerForm.setOrder(order);
+        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
         order.setClosed(true);
         order.setIssue(false);
         orderDao.save(order);
@@ -78,6 +82,7 @@ public class ManagerController {
     public String closeEmployee(@PathVariable Integer id,
                                 @ModelAttribute("answerForm") Answer answerForm){
         Order order = orderDao.getById(id);
+        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
         answerForm.setOrder(order);
         order.setClosed(true);
         order.setIssue(false);

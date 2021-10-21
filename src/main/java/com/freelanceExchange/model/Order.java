@@ -29,7 +29,7 @@ public class Order {
 
     private boolean closed;
 
-    private LocalDateTime dateTime;
+    private String dateTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -127,11 +127,11 @@ public class Order {
         this.issue = issue;
     }
 
-    public LocalDateTime getDateTime() {
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 }

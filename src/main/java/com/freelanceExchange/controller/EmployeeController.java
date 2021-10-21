@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,9 +51,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/new-proposal{id}")
-    public String newProposal(@PathVariable Integer id, Model model) {
+    public String newProposal(@PathVariable Integer id, Model model, @AuthenticationPrincipal User authUser) {
         Order order = orderDao.getById(id);
+        List<Proposal> myProposals= proposalDao.findProposalsByOrderAndUser(order, authUser);
         model.addAttribute("order", order);
+        model.addAttribute("myProposals", myProposals);
         model.addAttribute("proposalForm", new Proposal());
 
         return "/order/employee/newProposal";
@@ -75,8 +79,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/active-order{id}")
-    public String activeOrder(@PathVariable Integer id, Model model) {
+    public String activeOrder(@PathVariable Integer id, Model model, @AuthenticationPrincipal User authUser) {
         Order order = orderDao.getById(id);
+        if(!order.getEmployee().getId().equals(authUser.getId())){
+            return "redirect:/forbidden";
+        }
         model.addAttribute("order", order);
         Proposal proposal = proposalDao.getProposalByOrderAndDeclinedIsFalse(order);
         model.addAttribute("proposal", proposal);
@@ -105,6 +112,7 @@ public class EmployeeController {
             file.transferTo(new File(uploadPath + "/" + resultFileName));
             Order order = orderDao.getById(id);
             resultForm.setOrder(order);
+            resultForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
             order.setReady(true);
             orderDao.save(order);
             resultDao.save(resultForm);

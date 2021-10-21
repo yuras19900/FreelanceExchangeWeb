@@ -9,7 +9,7 @@
 <body>
 <h1>Заказы, на которые поступили жалобы</h1>
 <c:forEach var="issueOrder" items="${issueOrders}">
-    <p>Заказ № ${issueOrder.id} <a href=""></a>  Название: ${issueOrder.name}</p>
+    <p>Заказ № ${issueOrder.id} <a href=""></a>  Название: ${issueOrder.name} ${issueOrder.dateTime}</p>
     <p><a href="/manager/issue-order${issueOrder.id}">Просмотреть заказ</a> </p>
 </c:forEach>
 

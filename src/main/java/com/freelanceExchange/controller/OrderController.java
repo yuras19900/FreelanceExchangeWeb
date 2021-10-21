@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -58,14 +60,17 @@ public class OrderController {
     }
 
     @PostMapping("/new-order")
-    public String addOrder(@ModelAttribute("orderForm") Order orderForm, BindingResult bindingResult, Model model, @AuthenticationPrincipal User user) {
+    public String addOrder(@ModelAttribute("orderForm") Order orderForm, @AuthenticationPrincipal User user) {
         orderService.saveOrder(orderForm, user);
         return "redirect:/my-orders";
     }
 
     @GetMapping("/order{id}")
-    public String orderById(@PathVariable Integer id, Model model) {
+    public String orderById(@PathVariable Integer id, Model model, @AuthenticationPrincipal User authUser) {
         Order order = orderDao.getById(id);
+        if(!order.getUser().getId().equals(authUser.getId())){
+            return "redirect:/forbidden";
+        }
         model.addAttribute("order", order);
         model.addAttribute("reportForm", new Report());
         List<Answer> answers = answerDao.findAnswersByOrder(order);
@@ -90,12 +95,12 @@ public class OrderController {
 
         Order order = orderDao.getById(orderId);
         List<Proposal> declinedProposals = proposalDao.findProposalByOrder(order);
-        for (Proposal proposals : declinedProposals) { //помечаем все заявки на выполнения, как отклоненные
+        for (Proposal proposals : declinedProposals) {
             proposals.setDeclined(true);
             proposalDao.save(proposals);
         }
         Proposal proposal = proposalDao.getById(proposalId);
-        proposal.setDeclined(false); //помечаем выбранную пользователем заявку как не отклонённую
+        proposal.setDeclined(false);
         order.setEmployee(proposal.getUser());
         order.setVacant(false);
         orderDao.save(order);
@@ -131,7 +136,7 @@ public class OrderController {
         Order order = orderDao.getById(id);
         reportForm.setOrder(order);
         reportForm.setClosed(false);
-        reportForm.setDescription(reportForm.getDescription());
+        reportForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));;
         order.setIssue(true);
         orderDao.save(order);
         reportDao.save(reportForm);

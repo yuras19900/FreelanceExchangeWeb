@@ -9,10 +9,10 @@
 <body>
 <h2>Заказ №${order.id}</h2>
 <p>Название заказа</p>
-${order.name}
-<p>Описание заказа</p>
+${order.name} ${order.dateTime}
+<p>Название заказа</p>
 ${order.description}
-<p>Тег заказа</p>
+<p>Название заказа</p>
 ${order.tag}
 <br>
 <c:if test="${order.vacant == true}">
@@ -21,6 +21,7 @@ ${order.tag}
         <p>Заявки на выполнение отсутствуют, ожидайте</p>
     </c:if>
     <c:forEach var="proposal" items="${proposals}">
+        <p>${proposal.dateTime}</p>
         <p>Отправитель:${proposal.user.username}</p>
         <p>Описание: ${proposal.description}</p>
         <p>Стоимость выполнения: ${proposal.cost} BYN</p>
@@ -47,12 +48,14 @@ ${order.tag}
     <c:if test="${order.paid == true}">
         <p>Заказ выполнен.</p>
         <c:forEach var="result" items="${results}">
-            <p>Описание: ${result.description}
+            <p>${result.dateTime}</p>
+            <p>Описание: ${result.description}</p>
             <p><a href="/download${result.filename}" download>Скачать</a></p>
         </c:forEach>
 
         <c:if test="${order.closed == false}">
         <c:if test="${order.issue == false}">
+            <c:if test="${order.ready == true}">
             <p>Если вы удовлетворены выполнением заказа, и результат соответсвует ранее обговоренным требованиям,
                 нажмите клавишу "Закрыть заказ".</p>
             <form method="post" action="/close-order${order.id}">
@@ -72,11 +75,13 @@ ${order.tag}
             </div>
         </c:if>
         </c:if>
+        </c:if>
         <c:if test="${order.issue == true}">Жалоба успешно отправлена, ожидайте, в скором времени наши менеджеры рассмотрят ваш заказ и примут по нему решение.</c:if>
     </c:if>
 </c:if>
 <c:forEach var="anwser" items="${answers}">
     <p>Решение по жалобе</p>
+    ${anwser.dateTime}
     ${anwser.description}
 </c:forEach>
 <c:if test="${order.closed == true}">

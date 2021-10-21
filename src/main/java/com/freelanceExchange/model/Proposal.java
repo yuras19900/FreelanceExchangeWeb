@@ -15,6 +15,8 @@ public class Proposal {
 
     private Integer cost;
 
+    private String dateTime;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
@@ -72,5 +74,13 @@ public class Proposal {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 }

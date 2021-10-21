@@ -3,17 +3,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
+    <meta charset="utf-8">
     <title>Работа с заказом №${order.id}</title>
 </head>
 <body>
-<p>Заказчик: ${order.user}</p>
-<p>Название заказа: ${order.name}
-</p>
-<p>Описание заказа: ${order.description}
-</p>
-<p>Стоимость заказа: ${proposal.cost}
-</p>
+<p>Заказчик: ${order.user.username}</p>
+<p>Название заказа: ${order.name} ${order.dateTime}</p>
+<p>Описание заказа: ${order.description}</p>
+<p>Стоимость заказа: ${proposal.cost}BYN</p>
+
     <c:forEach var="result" items="${results}">
+        <p>${result.dateTime}</p>
         <p>${result.description}</p>
         <a href="/download${order.id}">Скачать файл</a>
     </c:forEach>
@@ -38,6 +38,7 @@
 </c:if>
 <c:forEach var="anwser" items="${answers}">
     <p>Решение по жалобе</p>
+    <p>${anwser.dateTime}</p>
     <p>${anwser.description}</p>
 </c:forEach>
 </body>

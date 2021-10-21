@@ -10,12 +10,19 @@
 <body>
 <h2>Заказ №${order.id}</h2>
 <p>Название заказа</p>
-${order.name}
+${order.name} ${order.dateTime}
 <p>Описание заказа</p>
 ${order.description}
 <p>Тег заказа</p>
 ${order.tag}
-
+<div>
+    <c:forEach var="myProposal" items="${myProposals}">
+        ${myProposal.dateTime}
+        ${myProposal.description}
+        ${myProposal.cost} BYN
+        <c:if test="${myProposal.declined == true}">Заявка отклонена</c:if><br>
+    </c:forEach>
+</div>
 <div>
     <form:form method="post" modelAttribute="proposalForm" action="/employee/new-proposal${order.id}">
     <h2>Создание заявки на выполнение заказа</h2>

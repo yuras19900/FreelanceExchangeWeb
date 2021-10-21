@@ -7,7 +7,7 @@
 </head>
 <body>
 <c:forEach var="order" items="${vacantOrders}">
-    <p>${order.name}</p>
+    <p>${order.name}  ${order.dateTime}</p>
     <p>${order.description}</p>
     <p>${order.tag}</p>
     <a href="/employee/new-proposal${order.id}">Просмотреть заказ</a>

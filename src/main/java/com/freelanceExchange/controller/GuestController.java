@@ -18,7 +18,12 @@ public class GuestController {
     }
 
     @GetMapping("/login")
-    private String login(Model model){
+    private String login(){
         return "/authorization/login";
+    }
+
+    @GetMapping("/forbidden")
+    private String forbidden(){
+        return "/general/forbidden";
     }
 }

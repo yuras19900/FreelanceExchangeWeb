@@ -1,9 +1,17 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=utf-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
+<head>
+    <meta charset="utf-8">
+    <title>Главная</title>
+</head>
 <body>
-<h2>Main page</h2>
+<h2><spring:message code="main.header"/> </h2>
+<a href="?lang=en"><img src="images/great-britain.png" alt="English"></a>
+<a href="?lang=ru"><img src="images/russian-federation.png" alt="Русский"></a>
+<br>
 <sec:authorize access="isAnonymous()">
     Чтобы иметь доступ ко всему функционалу <a href="/login">войдите</a> в систему.
 </sec:authorize>

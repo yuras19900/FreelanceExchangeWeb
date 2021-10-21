@@ -14,19 +14,17 @@
 </table>
 <p>Активные заказы</p>
 <c:forEach var="activeOrder" items="${activeOrders}">
-    <p>${activeOrder.name}</p>
+    <p>${activeOrder.name} ${activeOrder.dateTime}</p>
     <p>Статус заказа:
-      <c:if test="${activeOrder.vacant == false}">
-            <c:if test="${activeOrder.ready == false}">
-
-            </c:if>
-
-    </c:if></p>
+        <c:choose>
+            <c:when test="${activeOrder.vacant == false} ${activeOrder.closed==true}"> Свободен</c:when>
+        </c:choose>
+    </p>
     <a href="/order${activeOrder.id}">Просмотр заказа</a>
 </c:forEach>
 <p>Выполненные заказы</p>
 <c:forEach var="closedOrder" items="${closedOrders}">
-    <p>${closedOrder.name}</p>
+    <p>${closedOrder.name} ${closedOrder.dateTime}</p>
     <p>Статус заказа:
         <c:if test="${closedOrder.vacant == false}">
             <c:if test="${closedOrder.ready == false}">

@@ -13,6 +13,8 @@ public class Result {
 
     private String filename;
 
+    private String dateTime;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
@@ -50,5 +52,13 @@ public class Result {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 }

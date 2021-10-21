@@ -3,10 +3,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
+    <meta charset="utf-8">
     <title>Рассмотр жалобы</title>
 </head>
 <body>
-<p>№: ${issueOrder.id} ${issueOrder.name}</p>
+<p>№: ${issueOrder.id} ${issueOrder.name} ${issueOrder.dateTime}</p>
 <p>${issueOrder.description}</p>
 <p>Принятое предложение:</p>
 <p>${acceptedProposal.description}</p>
