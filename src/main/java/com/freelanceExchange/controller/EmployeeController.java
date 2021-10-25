@@ -50,10 +50,23 @@ public class EmployeeController {
         return "/order/employee/vacantOrders";
     }
 
+    @PostMapping("filter")
+    public String filter(Model model, @RequestParam String filter) {
+        Iterable<Order> ordersByTag;
+        if(!filter.isEmpty()) {
+            ordersByTag = orderDao.findOrdersByTagAndVacantIsTrue(filter);
+        } else {
+            ordersByTag = orderDao.findByVacantIsTrue();
+        }
+        model.addAttribute("vacantOrders", ordersByTag);
+        return "/order/employee/vacantOrders";
+    }
+
+
     @GetMapping("/new-proposal{id}")
     public String newProposal(@PathVariable Integer id, Model model, @AuthenticationPrincipal User authUser) {
         Order order = orderDao.getById(id);
-        List<Proposal> myProposals= proposalDao.findProposalsByOrderAndUser(order, authUser);
+        List<Proposal> myProposals = proposalDao.findProposalsByOrderAndUser(order, authUser);
         model.addAttribute("order", order);
         model.addAttribute("myProposals", myProposals);
         model.addAttribute("proposalForm", new Proposal());
@@ -61,9 +74,9 @@ public class EmployeeController {
         return "/order/employee/newProposal";
     }
 
-    @PostMapping("/new-proposal{id}")
-    public String newProposal(@PathVariable Integer id, @ModelAttribute("proposalForm") Proposal proposalForm, @AuthenticationPrincipal User user) {
-        Order order = orderDao.getById(id);
+    @PostMapping("new-proposal")
+    public String newProposal(@ModelAttribute("proposalForm") Proposal proposalForm, @AuthenticationPrincipal User user, @RequestParam Integer orderId) {
+        Order order = orderDao.getById(orderId);
         proposalForm.setOrder(order);
         proposalService.saveProposal(proposalForm, user);
         return "redirect:/employee/vacant-orders";
@@ -71,8 +84,8 @@ public class EmployeeController {
 
     @GetMapping("/my-active-orders")
     public String myActiveOrders(@AuthenticationPrincipal User user, Model model) {
-        List<Order> activeOrders = orderDao.findAllByEmployeeIdAndClosedIsFalse(user.getId());
-        List<Order> closedOrders = orderDao.findAllByEmployeeIdAndClosedIsTrue(user.getId());
+        List<Order> activeOrders = orderDao.findAllByEmployeeAndClosedIsFalse(user);
+        List<Order> closedOrders = orderDao.findAllByEmployeeAndClosedIsTrue(user);
         model.addAttribute("activeOrders", activeOrders);
         model.addAttribute("closedOrders", closedOrders);
         return "/order/employee/myActiveOrders";
@@ -81,7 +94,7 @@ public class EmployeeController {
     @GetMapping("/active-order{id}")
     public String activeOrder(@PathVariable Integer id, Model model, @AuthenticationPrincipal User authUser) {
         Order order = orderDao.getById(id);
-        if(!order.getEmployee().getId().equals(authUser.getId())){
+        if (!order.getEmployee().getId().equals(authUser.getId())) {
             return "redirect:/forbidden";
         }
         model.addAttribute("order", order);
@@ -95,12 +108,12 @@ public class EmployeeController {
         return "/order/employee/activeOrder";
     }
 
-    @PostMapping("/add-result{id}")
-    public String addResult(@PathVariable Integer id, @ModelAttribute("resultForm") Result resultForm,
+    @PostMapping("add-result")
+    public String addResult(@RequestParam Integer orderId, @ModelAttribute("resultForm") Result resultForm,
                             @RequestParam("file") MultipartFile file, Model model) throws IOException {
         if (file.isEmpty()) {
             model.addAttribute("emptyFileError", "К отчету необходимо прикрепить файл");
-            return "redirect:/employee/active-order{id}";
+            return "redirect:/employee/my-active-orders";
         } else {
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
@@ -110,13 +123,13 @@ public class EmployeeController {
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
             resultForm.setFilename(resultFileName);
             file.transferTo(new File(uploadPath + "/" + resultFileName));
-            Order order = orderDao.getById(id);
+            Order order = orderDao.getById(orderId);
             resultForm.setOrder(order);
-            resultForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
+            resultForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));
             order.setReady(true);
             orderDao.save(order);
             resultDao.save(resultForm);
         }
-        return "redirect:/employee/active-order{id}";
+        return "redirect:/employee/my-active-orders";
     }
 }

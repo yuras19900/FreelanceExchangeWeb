@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,9 +39,6 @@ public class OrderController {
 
     @Autowired
     private AnswerDao answerDao;
-
-    @Value("${upload.path}")
-    private String uploadPath;
 
     @GetMapping("/my-orders")
     public String myOrders(Model model, @AuthenticationPrincipal User user) {
@@ -90,8 +86,8 @@ public class OrderController {
         return "order/order";
     }
 
-    @PostMapping("/accept-proposal{proposalId}for{orderId}")
-    public String acceptProposal(@PathVariable Integer proposalId, @PathVariable Integer orderId) {
+    @PostMapping("accept-proposal")
+    public String acceptProposal(@RequestParam Integer orderId, @RequestParam Integer proposalId) {
 
         Order order = orderDao.getById(orderId);
         List<Proposal> declinedProposals = proposalDao.findProposalByOrder(order);
@@ -107,17 +103,17 @@ public class OrderController {
         return "redirect:/my-orders";
     }
 
-    @PostMapping("payOrder{orderId}")
-    public String payOrder(@PathVariable Integer orderId) {
+    @PostMapping("payOrder")
+    public String payOrder(@RequestParam Integer orderId) {
         Order order = orderDao.getById(orderId);
         order.setPaid(true);
         orderDao.save(order);
-        return "redirect:/order{orderId}";
+        return "redirect:/my-orders";
     }
 
-    @GetMapping("/download{fileName}")
+    @GetMapping("/download/{fileName}")
     public String downloadFile(@PathVariable String fileName, HttpServletResponse response){
-        Path file = Paths.get(uploadPath);
+        Path file = Paths.get("classpath:files/");
         if(Files.exists(file)){
             response.setHeader("Content-disposition", "attachment;filename=" + fileName);
             response.setContentType("application/octet-stream");
@@ -131,21 +127,21 @@ public class OrderController {
         return "order/myOrders";
     }
 
-    @PostMapping("/new-report{id}")
-    public String newReport(@PathVariable Integer id, @ModelAttribute ("reportForm") Report reportForm){
-        Order order = orderDao.getById(id);
+    @PostMapping("new-report")
+    public String newReport(@RequestParam Integer orderId, @ModelAttribute ("reportForm") Report reportForm){
+        Order order = orderDao.getById(orderId);
         reportForm.setOrder(order);
         reportForm.setClosed(false);
-        reportForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));;
+        reportForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));;
         order.setIssue(true);
         orderDao.save(order);
         reportDao.save(reportForm);
-        return "redirect:/order{id}";
+        return "redirect:/my-orders";
     }
 
-    @PostMapping("/close-order{id}")
-    public String closeOrder(@PathVariable Integer id){
-        Order order =orderDao.getById(id);
+    @PostMapping("close-order")
+    public String closeOrder(@RequestParam Integer orderId){
+        Order order =orderDao.getById(orderId);
         order.setClosed(true);
         orderDao.save(order);
         return "redirect:/my-orders";

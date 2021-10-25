@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderDao extends JpaRepository<Order, Integer> {
-    List<Order> findAllByUserId(Integer userId);
+    List<Order> findOrdersByTagAndVacantIsTrue(String tag);
     Optional<Order> findById(Integer id);
     List<Order> findByVacantIsTrue();
-    List<Order> findAllByEmployeeIdAndClosedIsFalse(Integer employeeId);
-    List<Order> findAllByEmployeeIdAndClosedIsTrue(Integer employeeId);
+    List<Order> findAllByEmployeeAndClosedIsFalse(User employee);
+    List<Order> findAllByEmployeeAndClosedIsTrue(User employee);
     List<Order> findByIssueIsTrue();
     List<Order> findOrdersByUserAndClosedIsFalse(User user);
     List<Order> findOrdersByUserAndClosedIsTrue(User user);
+    List<Order> findAll();
 }

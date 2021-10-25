@@ -19,7 +19,7 @@ public class ProposalService {
     public void saveProposal(Proposal proposal, @AuthenticationPrincipal User user){
         proposal.setUser(user);
         proposal.setDeclined(false);
-        proposal.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
+        proposal.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));
         proposalDao.save(proposal);
     }
 }

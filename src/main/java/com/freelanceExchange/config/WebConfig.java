@@ -18,9 +18,6 @@ import java.util.Locale;
 @ComponentScan(basePackages = {"com.freelanceExchange.controller"})
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${upload.path}")
-    private String uploadPath;
-
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("authorization/login");
@@ -32,10 +29,11 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("")
-                .addResourceLocations("file:///" + uploadPath + "/");
-        registry.addResourceHandler("/static/images/**").addResourceLocations("classpath:static/images/");
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/download/**")
+                .addResourceLocations("classpath:files/");
+        registry.addResourceHandler("/img/**")
+                .addResourceLocations("classpath:images/");
     }
 
     @Bean("messageSource")

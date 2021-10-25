@@ -29,9 +29,9 @@ public class AdminController {
         return "admin/allUsers";
     }
 
-    @PostMapping("/block{id}")
-    public String blockUser(@PathVariable Integer id, Model model){
-        User user = userDao.getById(id);
+    @PostMapping("/block")
+    public String blockUser(@RequestParam Integer userId, Model model){
+        User user = userDao.getById(userId);
         if(user.getUsername().equals("admin")){
             model.addAttribute("adminBlockError", "Не надо так делать");
             return "redirect:/admin/all-users";
@@ -63,6 +63,6 @@ public class AdminController {
             model.addAttribute("managerUsernameError", "Пользователь с таким именем уже существует");
             return "admin/addManager";
         }
-        return "redirect:/admin/all-users";
+        return "redirect:/";
     }
 }

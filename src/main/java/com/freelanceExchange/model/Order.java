@@ -1,7 +1,6 @@
 package com.freelanceExchange.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders") //order зарезервировано sql
@@ -28,6 +27,8 @@ public class Order {
     private boolean paid;
 
     private boolean closed;
+
+    private boolean locked;
 
     private String dateTime;
 
@@ -133,5 +134,13 @@ public class Order {
 
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

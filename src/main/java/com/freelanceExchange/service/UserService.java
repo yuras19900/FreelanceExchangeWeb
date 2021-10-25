@@ -2,7 +2,6 @@ package com.freelanceExchange.service;
 
 import com.freelanceExchange.dao.RoleDao;
 import com.freelanceExchange.dao.UserDao;
-import com.freelanceExchange.model.Role;
 import com.freelanceExchange.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,17 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class UserService implements UserDetailsService {
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Autowired
     UserDao userDao;

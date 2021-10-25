@@ -1,92 +1,109 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Просмотр заказа №${order.id}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title><spring:message code="order.browse.title"/> №${order.id}</title>
 </head>
 <body>
-<h2>Заказ №${order.id}</h2>
-<p>Название заказа</p>
-${order.name} ${order.dateTime}
-<p>Название заказа</p>
-${order.description}
-<p>Название заказа</p>
-${order.tag}
-<br>
-<c:if test="${order.vacant == true}">
-    <h3>Заявки на выполнение</h3>
-    <c:if test="${proposals == null}">
-        <p>Заявки на выполнение отсутствуют, ожидайте</p>
-    </c:if>
-    <c:forEach var="proposal" items="${proposals}">
-        <p>${proposal.dateTime}</p>
-        <p>Отправитель:${proposal.user.username}</p>
-        <p>Описание: ${proposal.description}</p>
-        <p>Стоимость выполнения: ${proposal.cost} BYN</p>
-        <form method="post" action="accept-proposal${proposal.id}for${order.id}">
-            <button type="submit">Принять заявку и внести предоплату</button>
-        </form>
-    </c:forEach>
-</c:if>
-<c:if test="${order.vacant == false}">
-    <c:if test="${order.ready == false}">
-        <h3>Предоплата внесена, исполнитель работает с заказом</h3>
-        <p>Информация о заявке:</p>
-        <p>Цена:${acceptedProposal.cost}</p>
-        <p>Описание:${acceptedProposal.description}</p>
-    </c:if>
-    <c:if test="${order.ready == true}">
-        <c:if test="${order.paid == false}">
-            <p> Заказ выполнен. Для получения доступа к файлу, оплатите оставшуюся часть заказа</p>
-            <form method="post" action="payOrder${order.id}">
-                <button type="submit">Оплатить</button>
-            </form>
-        </c:if>
-    </c:if>
-    <c:if test="${order.paid == true}">
-        <p>Заказ выполнен.</p>
-        <c:forEach var="result" items="${results}">
-            <p>${result.dateTime}</p>
-            <p>Описание: ${result.description}</p>
-            <p><a href="/download${result.filename}" download>Скачать</a></p>
-        </c:forEach>
+<jsp:include page="../navbar.jsp"/>
+<div class="container" style="background-color: #c4f2ce; border-radius: 10px; padding: 10px">
+    <c:if test="${order.locked == false}">
+        <h2><spring:message code="order.number"/>${order.id}</h2>
+        <p><spring:message code="order.name"/>:<br> ${order.name} ${order.dateTime}</p>
+        <p><spring:message code="order.description"/>:<br> ${order.description}</p>
+        <p><spring:message code="order.tag"/>:<br> ${order.tag}</p>
 
-        <c:if test="${order.closed == false}">
-        <c:if test="${order.issue == false}">
+        <c:if test="${order.vacant == true}">
+            <h3><spring:message code="order.proposals"/></h3>
+            <c:if test="${proposals == null}">
+                <p><spring:message code="order.no.proposals"/></p>
+            </c:if>
+            <c:forEach var="proposal" items="${proposals}">
+                <p>${proposal.dateTime}</p>
+                <p><spring:message code="order.proposal.sender"/>${proposal.user.username}</p>
+                <p><spring:message code="order.proposal.description"/>${proposal.description}</p>
+                <p><spring:message code="order.proposal.cost"/>: ${proposal.cost} BYN</p>
+                <form method="post" action="accept-proposal">
+                    <input type="number" name="orderId" hidden  value="${order.id}">
+                    <input type="number" name="proposalId" hidden  value="${proposal.id}">
+                    <button type="submit"><spring:message code="order.proposal.accept.href"/></button>
+                </form>
+            </c:forEach>
+        </c:if>
+        <c:if test="${order.vacant == false}">
+            <c:if test="${order.ready == false}">
+                <h3><spring:message code="order.proposal.accepted"/></h3>
+                <p><spring:message code="order.proposal.info"/></p>
+                <p><spring:message code="order.proposal.info.price"/>${acceptedProposal.cost}</p>
+                <p><spring:message code="order.proposal.info.description"/>${acceptedProposal.description}</p>
+            </c:if>
             <c:if test="${order.ready == true}">
-            <p>Если вы удовлетворены выполнением заказа, и результат соответсвует ранее обговоренным требованиям,
-                нажмите клавишу "Закрыть заказ".</p>
-            <form method="post" action="/close-order${order.id}">
-                <button type="submit">Закрыть заказ</button>
-            </form>
-            <p>Если выполненный заказ не соответствует заявленным требованиям, вы в праве оставить жалобу, заполнив
-                форму, которая находится снизу.</p>
-            <div>
-                <form:form method="post" modelAttribute="reportForm" action="/new-report${order.id}">
-                    <p>Жалоба на выполненный заказ</p>
-                    <div>
-                        <form:input type="text" path="description" required="true"
-                                    placeholder="Описание жалобы"></form:input>
+                <c:if test="${order.paid == false}">
+                    <p><spring:message code="order.ready.pay"/></p>
+                    <form method="post" action="payOrder">
+                        <input type="number" name="orderId" hidden  value="${order.id}">
+                        <button type="submit"><spring:message code="order.pay.submit"/></button>
+                    </form>
+                </c:if>
+            </c:if>
+            <c:if test="${order.paid == true}">
+                <p><spring:message code="order.ready"/></p>
+                <c:forEach var="result" items="${results}">
+                    <div style="border-radius: 5px; border: 1px solid black; padding: 10px">
+                        <p>${result.dateTime}</p>
+                        <p><spring:message code="order.ready.description"/>${result.description}</p>
+                        <p><a href="/download/${result.filename}" download><spring:message
+                                code="order.ready.download"/></a>
+                        </p>
                     </div>
-                    <button type="submit">Оставить жалобу</button>
-                </form:form>
-            </div>
-        </c:if>
-        </c:if>
-        </c:if>
-        <c:if test="${order.issue == true}">Жалоба успешно отправлена, ожидайте, в скором времени наши менеджеры рассмотрят ваш заказ и примут по нему решение.</c:if>
-    </c:if>
-</c:if>
-<c:forEach var="anwser" items="${answers}">
-    <p>Решение по жалобе</p>
-    ${anwser.dateTime}
-    ${anwser.description}
-</c:forEach>
-<c:if test="${order.closed == true}">
-    <p>Ваш заказ выполнен. Если у вас какие-то вопросы по поводу заказа, свяжитесь с нашими менеджерами. Спасибо, что воспользовались нашими услугами!</p>
-</c:if>
+                    <br>
+                </c:forEach>
 
+                <c:if test="${order.closed == false}">
+                    <c:if test="${order.issue == false}">
+                        <c:if test="${order.ready == true}">
+                            <p><spring:message code="order.satisfied"/></p>
+                            <form method="post" action="close-order">
+                                <input type="number" name="orderId" hidden  value="${order.id}">
+                                <button type="submit"><spring:message code="order.satisfied.close.submit"/></button>
+                            </form>
+                            <p><spring:message code="order.not.satisfied"/></p>
+                            <div>
+                                <form:form method="post" modelAttribute="reportForm" action="new-report">
+                                    <p><spring:message code="order.not.satisfied.complaint"/></p>
+                                    <div>
+                                        <input type="number" name="orderId" hidden  value="${order.id}">
+                                        <form:input type="text" path="description" required="true"
+                                                    placeholder="Описание жалобы"></form:input>
+                                    </div>
+                                    <button type="submit"><spring:message
+                                            code="order.not.satisfied.complaint.submit"/></button>
+                                </form:form>
+                            </div>
+                        </c:if>
+                    </c:if>
+                </c:if>
+                <c:if test="${order.issue == true}"><spring:message code="order.complaint.succesfull"/></c:if>
+            </c:if>
+        </c:if>
+        <c:forEach var="anwser" items="${answers}">
+            <div style="border-radius: 5px; border: 1px solid black; padding: 10px">
+                <p><spring:message code="order.complaint.anwser"/></p>
+                    ${anwser.dateTime}
+                    ${anwser.description}
+            </div>
+            <br>
+        </c:forEach>
+        <c:if test="${order.closed == true}">
+            <p><spring:message code="order.closed"/></p>
+        </c:if>
+    </c:if>
+    <c:if test="${order.locked==true}"><h2>Заказ заблокирован. Обратитесь к администрации</h2></c:if>
+</div>
 </body>
 </html>

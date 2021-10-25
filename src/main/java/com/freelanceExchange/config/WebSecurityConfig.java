@@ -1,6 +1,5 @@
 package com.freelanceExchange.config;
 
-import com.freelanceExchange.model.User;
 import com.freelanceExchange.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +8,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
@@ -29,11 +27,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/registration").not().fullyAuthenticated()
-                .antMatchers("/").permitAll()
-                .antMatchers("/aboutUs").hasAuthority("USER")
-                .antMatchers("/employee**").hasAuthority("EMPLOYEE")
-                .antMatchers("/manager**").hasAnyAuthority("MANAGER", "ADMIN")
-                .antMatchers("/admin**").hasAuthority("ADMIN")
+                .antMatchers("/", "/img/**", "/about-us").permitAll()
+                .antMatchers("/my-orders").hasRole("USER")
+                .antMatchers("/employee/**").hasRole("EMPLOYEE")
+                .antMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -45,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .logoutSuccessUrl("/")
                 .and()
-                .exceptionHandling().accessDeniedPage("/general/forbidden.jsp")
+                .exceptionHandling().accessDeniedPage("/forbidden")
                 .and()
                 .csrf().disable();
     }

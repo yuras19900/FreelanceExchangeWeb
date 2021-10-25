@@ -38,10 +38,10 @@ public class ManagerController {
     }
 
     @GetMapping("/issue-order{id}")
-    public String issueOrder(@PathVariable Integer id, Model model){
+    public String issueOrder(@PathVariable Integer id, Model model) {
         Order issueOrder = orderDao.getById(id);
         Proposal acceptedProposal = proposalDao.getProposalByOrderAndDeclinedIsFalse(issueOrder);
-        List <Result> results = resultDao.findResultsByOrder(issueOrder);
+        List<Result> results = resultDao.findResultsByOrder(issueOrder);
         List<Report> reports = reportDao.findReportsByOrder(issueOrder);
         model.addAttribute("issueOrder", issueOrder);
         model.addAttribute("acceptedProposal", acceptedProposal);
@@ -51,12 +51,12 @@ public class ManagerController {
         return "order/manager/issueOrder";
     }
 
-    @PostMapping("send-for-revision{id}")
-    private String sendForRevision( @PathVariable Integer id,
-            @ModelAttribute("answerForm") Answer answerForm){
-        Order order = orderDao.getById(id);
+    @PostMapping("send-for-revision")
+    private String sendForRevision(@RequestParam Integer orderId,
+                                   @ModelAttribute("answerForm") Answer answerForm) {
+        Order order = orderDao.getById(orderId);
         answerForm.setOrder(order);
-        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
+        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));
         order.setReady(false);
         order.setIssue(false);
         orderDao.save(order);
@@ -65,12 +65,12 @@ public class ManagerController {
     }
 
 
-    @PostMapping("close-customer{id}")
-    private String closeCustomer(@PathVariable Integer id,
-                                 @ModelAttribute("answerForm") Answer answerForm){
-        Order order = orderDao.getById(id);
+    @PostMapping("close-customer")
+    private String closeCustomer(@RequestParam Integer orderId,
+                                 @ModelAttribute("answerForm") Answer answerForm) {
+        Order order = orderDao.getById(orderId);
         answerForm.setOrder(order);
-        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
+        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));
         order.setClosed(true);
         order.setIssue(false);
         orderDao.save(order);
@@ -78,16 +78,41 @@ public class ManagerController {
         return "redirect:/manager/issue-orders";
     }
 
-    @PostMapping("close-employee{id}")
-    public String closeEmployee(@PathVariable Integer id,
-                                @ModelAttribute("answerForm") Answer answerForm){
-        Order order = orderDao.getById(id);
-        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm dd.MM.yyyy")));
+    @PostMapping("close-employee")
+    public String closeEmployee(@RequestParam Integer orderId,
+                                @ModelAttribute("answerForm") Answer answerForm) {
+        Order order = orderDao.getById(orderId);
+        answerForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));
         answerForm.setOrder(order);
         order.setClosed(true);
         order.setIssue(false);
         orderDao.save(order);
         answerDao.save(answerForm);
         return "redirect:/manager/issue-orders";
+    }
+
+    @GetMapping("/view-orders")
+    public String viewOrders(Model model) {
+        List<Order> orders = orderDao.findAll();
+        model.addAttribute("orders", orders);
+        return "order/manager/viewOrders";
+    }
+
+    @PostMapping("/lock")
+    public String blockUser(@RequestParam Integer orderId) {
+        Order order = orderDao.getById(orderId);
+        if (order.isLocked()) {
+            order.setLocked(false);
+            order.setClosed(false);
+            orderDao.save(order);
+        } else if (!order.isLocked()) {
+            if(!order.isClosed()) {
+                order.setVacant(false);
+                order.setLocked(true);
+                order.setClosed(true);
+                orderDao.save(order);
+            }
+        }
+        return "redirect:/manager/view-orders";
     }
 }
