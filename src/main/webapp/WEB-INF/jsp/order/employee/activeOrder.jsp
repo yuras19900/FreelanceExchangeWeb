@@ -22,7 +22,7 @@
         <div style="border-radius: 5px; border: 1px solid black; padding: 10px">
             <p>${result.dateTime}<br>
                     ${result.description}</p>
-            <a href="/download${order.id}"><spring:message code="order.ready.download"/></a>
+            <a href="/download/${result.filename}"><spring:message code="order.ready.download"/></a>
         </div>
         <br>
         </c:forEach>

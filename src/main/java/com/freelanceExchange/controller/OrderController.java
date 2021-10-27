@@ -22,6 +22,9 @@ import java.util.List;
 @Controller
 public class OrderController {
 
+    @Value("${upload.path}")
+    private String uploadPath;
+
     @Autowired
     private OrderDao orderDao;
 
@@ -113,9 +116,9 @@ public class OrderController {
 
     @GetMapping("/download/{fileName}")
     public String downloadFile(@PathVariable String fileName, HttpServletResponse response){
-        Path file = Paths.get("classpath:files/");
+        Path file = Paths.get(uploadPath + "/" + fileName);
         if(Files.exists(file)){
-            response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+            response.setHeader("Content-disposition", "attachment;filename=" + fileName + "/");
             response.setContentType("application/octet-stream");
             try {
                 Files.copy(file, response.getOutputStream());

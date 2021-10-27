@@ -12,10 +12,12 @@
 <jsp:include page="../navbar.jsp"/>
 <div class="container-fluid" style="background-color: aliceblue; height: 100vh">
     <div class="container" style="background-color: #c4f2ce; height: 100vh; border-radius: 10px">
-        <spring:message code="about.us"/>
+        <div class="container" style="padding: 10px">
+        <p style="font-size: 22px"><spring:message code="about.us"/> </p>
         <p style="font-size: 22px">Viber: +375-44-xxx-xx-xx</p>
         <p style="font-size: 22px">Telegram: +375-44-xxx-xx-xx</p>
         <p style="font-size: 22px">Instagram: @FreelanceExchange</p>
+        </div>
     </div>
 </div>
 

@@ -53,7 +53,7 @@ public class EmployeeController {
     @PostMapping("filter")
     public String filter(Model model, @RequestParam String filter) {
         Iterable<Order> ordersByTag;
-        if(!filter.isEmpty()) {
+        if (!filter.isEmpty()) {
             ordersByTag = orderDao.findOrdersByTagAndVacantIsTrue(filter);
         } else {
             ordersByTag = orderDao.findByVacantIsTrue();
@@ -111,25 +111,20 @@ public class EmployeeController {
     @PostMapping("add-result")
     public String addResult(@RequestParam Integer orderId, @ModelAttribute("resultForm") Result resultForm,
                             @RequestParam("file") MultipartFile file, Model model) throws IOException {
-        if (file.isEmpty()) {
-            model.addAttribute("emptyFileError", "К отчету необходимо прикрепить файл");
-            return "redirect:/employee/my-active-orders";
-        } else {
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            resultForm.setFilename(resultFileName);
-            file.transferTo(new File(uploadPath + "/" + resultFileName));
-            Order order = orderDao.getById(orderId);
-            resultForm.setOrder(order);
-            resultForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));
-            order.setReady(true);
-            orderDao.save(order);
-            resultDao.save(resultForm);
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
         }
+        String uuidFile = UUID.randomUUID().toString();
+        String resultFileName = uuidFile + "." + file.getOriginalFilename();
+        resultForm.setFilename(resultFileName);
+        file.transferTo(new File(uploadPath + "/" + resultFileName));
+        Order order = orderDao.getById(orderId);
+        resultForm.setOrder(order);
+        resultForm.setDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")));
+        order.setReady(true);
+        orderDao.save(order);
+        resultDao.save(resultForm);
         return "redirect:/employee/my-active-orders";
     }
 }

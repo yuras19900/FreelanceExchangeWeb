@@ -14,7 +14,9 @@
     <jsp:include page="../navbar.jsp"/>
     <div class="container" style="background-color: #c4f2ce;border-radius: 10px">
         <br>
+        <div class="container">
         <a href="/"><img src="/img/logo.png"></a>
+        </div>
         <br>
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">

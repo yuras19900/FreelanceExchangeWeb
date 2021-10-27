@@ -11,8 +11,13 @@
 </head>
 <body>
 <jsp:include page="../navbar.jsp" />
-<spring:message code="forbidden.main"/>
-
+<div class="container" style="background-color: #c4f2ce;border-radius: 10px">
+    <div class="container">
+        <div class="container" style="padding: 10px">
+<p style="font-size: 22px"><spring:message code="forbidden.main"/></p>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
